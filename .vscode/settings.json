@@ -5,5 +5,8 @@
     "material-icon-theme.folders.associations": {
         "v[0-9]": "Other",
         "concerns": "Config"
-    }
+    },
+    "cSpell.words": [
+        "typeorm"
+    ]
 }
