@@ -25,7 +25,11 @@ git clone https://github.com/EuCarlos/permissions-users.git \
   && yarn install
 ```
 ### 2. Run the project
-
+First run migration
+```bash
+yarn typeorm migration:run
+```
+Then run as developer
 ```bash
 yarn dev
 ```
