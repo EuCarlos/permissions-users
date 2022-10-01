@@ -14,6 +14,7 @@ const UsersV1Router = require('./routes/v1/users.routes')
 const SessionV1Router = require('./routes/v1/sessions.routes')
 const PermissionV1Router = require('./routes/v1/permissions.routes')
 const RoleV1Router = require('./routes/v1/roles.routes')
+const ProductV1Router = require('./routes/v1/products.routes')
 
 import { JsonResponse } from './concerns/response'
 
@@ -31,6 +32,7 @@ app
     .use('/api/v1/sessions', SessionV1Router)
     .use('/api/v1/permissions', PermissionV1Router)
     .use('/api/v1/roles', RoleV1Router)
+    .use('/api/v1/products', ProductV1Router)
 
     .use((req, res) => {
         const pathname = req.originalUrl
@@ -40,10 +42,9 @@ app
     })
 
     .listen(PORT, () => {
-        console.log(`🔥 Server is running in PORT ${PORT} - ${process.env.NODE_ENV}`)
+        console.log(`\n🔥 Server is running in PORT ${PORT} - ${process.env.NODE_ENV}\n📚 Documentation is on the route: /api/v1/docs`)
     })
 
-console.log("🛣️  ROUTES")
+console.log("\n🛣️  ROUTES")
 app._router.stack.forEach(print.bind(null, []))
 
-console.log("📚 Documentation is on the route: /api/v1/docs")
