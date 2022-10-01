@@ -11,6 +11,7 @@ var bodyParser = require('body-parser')
 // routes
 const v1Router = require('./routes/v1')
 const UsersV1Router = require('./routes/v1/users.routes')
+const SessionV1Router = require('./routes/v1/sessions.routes')
 
 import { JsonResponse } from './concerns/response'
 
@@ -25,6 +26,7 @@ app
     .use('/api/v1/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocsV1 ))
     .use('/api/v1/workouts', v1Router)
     .use('/api/v1/users', UsersV1Router)
+    .use('/api/v1/sessions', SessionV1Router)
 
     .use((req, res) => {
         const pathname = req.originalUrl
