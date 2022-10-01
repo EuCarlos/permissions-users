@@ -1,6 +1,7 @@
-import { JsonResponse } from './../../concerns/response';
+import { JsonResponse } from './../../concerns/response'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
+import { hash } from 'bcryptjs'
 import UserRepository from 'src/repositories/UserRepository'
 
 class UserController {
@@ -16,13 +17,17 @@ class UserController {
             return res.status(400).json(result)
         }
 
+        const passwordHashed = await hash(password, 8)
+
         const user = userRepository.create({
             name,
             username,
-            password
+            password: passwordHashed
         })
 
         await userRepository.save(user)
+
+        delete user.password
 
         const result = new JsonResponse('User created', true, user)
         return res.status(201).json(result)
