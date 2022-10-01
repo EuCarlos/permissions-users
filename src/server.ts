@@ -13,6 +13,7 @@ const v1Router = require('./routes/v1')
 const UsersV1Router = require('./routes/v1/users.routes')
 const SessionV1Router = require('./routes/v1/sessions.routes')
 const PermissionV1Router = require('./routes/v1/permissions.routes')
+const RoleV1Router = require('./routes/v1/roles.routes')
 
 import { JsonResponse } from './concerns/response'
 
@@ -29,6 +30,7 @@ app
     .use('/api/v1/users', UsersV1Router)
     .use('/api/v1/sessions', SessionV1Router)
     .use('/api/v1/permissions', PermissionV1Router)
+    .use('/api/v1/roles', RoleV1Router)
 
     .use((req, res) => {
         const pathname = req.originalUrl
