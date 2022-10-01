@@ -12,6 +12,7 @@ var bodyParser = require('body-parser')
 const v1Router = require('./routes/v1')
 const UsersV1Router = require('./routes/v1/users.routes')
 const SessionV1Router = require('./routes/v1/sessions.routes')
+const PermissionV1Router = require('./routes/v1/permissions.routes')
 
 import { JsonResponse } from './concerns/response'
 
@@ -27,6 +28,7 @@ app
     .use('/api/v1/workouts', v1Router)
     .use('/api/v1/users', UsersV1Router)
     .use('/api/v1/sessions', SessionV1Router)
+    .use('/api/v1/permissions', PermissionV1Router)
 
     .use((req, res) => {
         const pathname = req.originalUrl
