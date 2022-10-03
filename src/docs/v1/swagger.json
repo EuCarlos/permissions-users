@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.3",
     "info": {
-      "title": "Boilerplate Typescript",
+      "title": "Permission users",
       "description": "This is documentation created with OpenAPI 3.0 for projects created with Boilerplate. You can discover more projects at [https://carlosalves.now.sh](https://carlosalves.now.sh).",
       "termsOfService": "https://github.com/EuCarlos/boilerplate-ts",
       "contact": {
@@ -26,6 +26,14 @@
       {
         "name": "workouts",
         "description": "Everything about your workouts"
+      },
+      {
+        "name": "auth",
+        "description": "User permissions"
+      },
+      {
+        "name": "products",
+        "description": "Everything about your products"
       }
     ],
     "paths": {
@@ -47,30 +55,354 @@
               }
             }
           }
-        },
+        }
+      },
+      "/users": {
         "post": {
           "tags": [
-            "workouts"
+            "auth"
           ],
-          "summary": "Returns the body sent",
+          "summary": "Create a new user",
           "requestBody": {
-            "description": "Insert any body",
+            "required": true,
+            "description": "a JSON object containing user information",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataGet"
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Carlos Alves"
+                    },
+                    "username": {
+                      "type": "string",
+                      "example": "eucarlos"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "abc123"
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "8bb622dd-a3ca-47eb-aeaf-a13add600778"
+                      }
+                    }
+                  }
                 }
               }
-            },
-            "required": true
+            }
           },
           "responses": {
             "201": {
+              "description": "User created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Users/properties/PostSuccess"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "User already exists!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Users/properties/PostError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/sessions": {
+        "post": {
+          "tags": [
+            "auth"
+          ],
+          "summary": "Create a new session",
+          "requestBody": {
+            "required": true,
+            "description": "a JSON object containing login information that will return user information and session token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "example": "eucarlos"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "abc123"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Session created!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Sessions/properties/PostSuccess"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "User not found!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Sessions/properties/PostError"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Incorrect password or username!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Sessions/properties/PostError403"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/permissions": {
+        "post": {
+          "tags": [
+            "auth"
+          ],
+          "summary": "Create a new permissions",
+          "requestBody": {
+            "required": true,
+            "description": "a JSON object containing permission information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "PERMISSIONS USERS"
+                    },
+                    "describe": {
+                      "type": "string",
+                      "example": "User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Permission created!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Permissions/properties/PostSuccess"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Permission already exists!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Permissions/properties/PostError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/roles": {
+        "post": {
+          "tags": [
+            "auth"
+          ],
+          "summary": "Create a new rule",
+          "requestBody": {
+            "required": true,
+            "description": "a JSON object containing role information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "PERMISSIONS USERS"
+                    },
+                    "describe": {
+                      "type": "string",
+                      "example": "User"
+                    },
+                    "permissions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "eeabc8f5-22e2-4d14-a9b2-1517586cee5c",
+                        "ff13d24d-2651-487c-a1d7-678f249a71c3"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Role created!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Roles/properties/PostSuccess"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Role already exists!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Roles/properties/PostError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/products/{productId}": {
+        "get": {
+          "tags": [
+            "products"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Returns a product by ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "productId",
+              "required": true,
+              "description": "UUID of the product to get.",
+              "schema": {
+                "type": "string",
+                "format": "uuid",
+                "example": "7f41aa27-467e-4dd6-b02f-199e42a00f19"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
               "description": "Successful operation",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/ApiResponse"
+                    "$ref": "#/components/schemas/Products/properties/GetByIdSuccess"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/products": {
+        "get": {
+          "tags": [
+            "products"
+          ],
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "summary": "Returns a list of products",
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Products/properties/GetSuccess"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "products"
+          ],
+          "summary": "Create a new product",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "description": "a JSON object containing product information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Teclado Keychron"
+                    },
+                    "describe": {
+                      "type": "string",
+                      "example": "Teclado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Product created successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Products/properties/PostSuccess"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Product already exists!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Products/properties/PostError"
                   }
                 }
               }
@@ -80,6 +412,13 @@
       }
     },
     "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
       "schemas": {
         "DataGet": {
           "type": "object",
@@ -98,11 +437,404 @@
             }
           }
         },
+        "Users": {
+          "type": "object",
+          "properties": {
+            "PostSuccess": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User created!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "f5a6972e-82a9-403e-9cba-d4115a7a7031"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Carlos Alves"
+                    },
+                    "username": {
+                      "type": "string",
+                      "example": "eucarlos"
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "8bb622dd-a3ca-47eb-aeaf-a13add600778"
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2022-10-03 12:22:32"
+                    }
+                  }
+                }
+              }
+            },
+            "PostError": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User already exists!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "Sessions": {
+          "type": "object",
+          "properties": {
+            "PostSuccess": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Session created!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NjQ2Mjk4OTAsImV4cCI6MTY2NDcxNjI5MCwic3ViIjoiMjMyNDkxMTktYmVjNS00Y2ZiLWEwNWEtYzQ3MWVkZDNjNGY1In0.5fKUREYwJ8Rz14g97HkKHvvVdjYGlWY3O5DiTFlFJ9o"
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "example": "23249119-bec5-4cfb-a05a-c471edd3c4f5"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string",
+                          "example": "eucarlos"
+                        },
+                        "password": {
+                          "type": "string",
+                          "example": "$2a$08$UZ1EucK3wFRDSP.ac5rmkuOkwIybkeil6DU3Fwag0OUqPsN/E68su"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date",
+                          "example": "2022-10-03 12:22:32"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "PostError": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User not found!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            },
+            "PostError403": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Incorrect password or username!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "Permissions": {
+          "type": "object",
+          "properties": {
+            "PostSuccess": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Permission created!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "eeabc8f5-22e2-4d14-a9b2-1517586cee5c"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "PERMISSIONS USERS"
+                    },
+                    "describe": {
+                      "type": "string",
+                      "example": "User"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date",
+                      "example": "2022-10-03 12:31:36"
+                    }
+                  }
+                }
+              }
+            },
+            "PostError": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Permission already exists!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "Roles": {
+          "type": "object",
+          "properties": {
+            "PostSuccess": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Role created!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "8bb622dd-a3ca-47eb-aeaf-a13add600778"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "ROLE_USER"
+                    },
+                    "describe": {
+                      "type": "string",
+                      "example": "User"
+                    },
+                    "permission": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      },
+                      "example": [
+                        {
+                          "id": "eeabc8f5-22e2-4d14-a9b2-1517586cee5c",
+                          "name": "create_product",
+                          "description": "Create product",
+                          "created_at": "2022-10-03 12:36:57"
+                        },
+                        {
+                          "id": "ff13d24d-2651-487c-a1d7-678f249a71c3",
+                          "name": "edit_product",
+                          "description": "Edit product",
+                          "created_at": "2022-10-03 12:37:22"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date",
+                      "example": "2022-10-03T16:09:48.000Z"
+                    }
+                  }
+                }
+              }
+            },
+            "PostError": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Role already exists!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "Products": {
+          "type": "object",
+          "properties": {
+            "PostSuccess": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Product created successfully!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "7f41aa27-467e-4dd6-b02f-199e42a00f19"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Teclado Keychron"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Teclado"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date",
+                      "example": "2022-10-03 12:36:57"
+                    }
+                  }
+                }
+              }
+            },
+            "PostError": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Product already exists!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            },
+            "GetByIdSuccess": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successful operation!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "7f41aa27-467e-4dd6-b02f-199e42a00f19"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Teclado Keychron"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Teclado"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date",
+                      "example": "2022-10-03 12:36:57"
+                    }
+                  }
+                }
+              }
+            },
+            "GetSuccess": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successful operation!"
+                },
+                "is_success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  },
+                  "example": [
+                    {
+                      "id": "7f41aa27-467e-4dd6-b02f-199e42a00f19",
+                      "name": "Teclado Keychron",
+                      "description": "Teclado",
+                      "created_at": "2022-10-03 12:36:57"
+                    },
+                    {
+                      "id": "ca735407-9588-4eb2-b9e0-df1f9293c145",
+                      "name": "mouse_89955",
+                      "description": "Mouse",
+                      "created_at": "2022-10-03 12:37:22"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
         "ApiResponse": {
-          "required": [
-            "name",
-            "photoUrls"
-          ],
           "type": "object",
           "properties": {
             "message": {
