@@ -1,7 +1,7 @@
-import { getCustomRepository } from 'typeorm';
-import { Request, Response } from "express";
-import PermissionRepository from 'src/repositories/PermissionRepository';
-import { JsonResponse } from 'src/concerns/response';
+import { getCustomRepository } from 'typeorm'
+import { Request, Response } from "express"
+import PermissionRepository from 'src/repositories/PermissionRepository'
+import result from 'src/concerns/response'
 
 
 class PermissionController {
@@ -12,17 +12,13 @@ class PermissionController {
 
         const existPermission = await permissionRepository.findOne({ name })
 
-        if (existPermission) {
-            const result = new JsonResponse('Permission already exists!', false)
-            return res.status(400).json(result)
-        }
+        if (existPermission) return res.status(400).json(result.response('Permission already exists!', false))
 
         const permission = permissionRepository.create({ name, describe })
 
         await permissionRepository.save(permission)
 
-        const result = new JsonResponse('Permission created!', true, permission)
-        return res.status(201).json(result)
+        return res.status(201).json(result.response('Permission created!', true, permission))
     }
 }
 

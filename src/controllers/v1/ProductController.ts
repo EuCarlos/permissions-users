@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { getCustomRepository } from "typeorm"
 import ProductRepository from 'src/repositories/ProductRepository'
-import { JsonResponse } from "src/concerns/response"
+import result from "src/concerns/response"
 
 class ProductController {
   async create(req: Request, res: Response) {
@@ -12,8 +12,7 @@ class ProductController {
     const existsProduct = await productRepository.findOne({ name })
 
     if (existsProduct) {
-        const result = new JsonResponse('Product already exists!', false)
-        return res.status(400).json(result)
+        return res.status(400).json(result.response('Product already exists!', false))
     }
 
     const product = productRepository.create({
@@ -23,8 +22,7 @@ class ProductController {
 
     await productRepository.save(product)
 
-    const result = new JsonResponse('Product created successfully!', true, product)
-    return res.status(201).json(result)
+    return res.status(201).json(result.response('Product created successfully!', true, product))
   }
 
   async index(req: Request, res: Response) {
@@ -32,13 +30,9 @@ class ProductController {
 
     const products = await productRepository.find()
 
-    if(!products) {
-        const result = new JsonResponse('Successful operation!', true)
-        return res.json(result)
-    }
+    if(!products) return res.json(result.response('Successful operation!', true))
 
-    const result = new JsonResponse('Successful operation!', true, products)
-    return res.json(result)
+    return res.json(result.response('Successful operation!', true, products))
   }
 
   async show(req: Request, res: Response) {
@@ -48,13 +42,9 @@ class ProductController {
 
     const product = await productRepository.findOne(id)
 
-    if(!product) {
-        const result = new JsonResponse('Successful operation!', true)
-        return res.json(result)
-    }
+    if(!product) return res.json(result.response('Successful operation!', true))
 
-    const result = new JsonResponse('Successful operation!', true, product)
-    return res.json(result)
+    return res.json(result.response('Successful operation!', true, product))
   }
 }
 

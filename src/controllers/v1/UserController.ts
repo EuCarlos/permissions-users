@@ -1,4 +1,4 @@
-import { JsonResponse } from './../../concerns/response'
+import result from './../../concerns/response'
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { hash } from 'bcryptjs'
@@ -14,10 +14,7 @@ class UserController {
 
         const existUser = await userRepository.findOne({ username })
 
-        if(existUser) {
-            const result = new JsonResponse('User already exists!', false)
-            return res.status(400).json(result)
-        }
+        if(existUser) return res.status(400).json(result.response('User already exists!', false))
 
         const passwordHashed = await hash(password, 8)
 
@@ -34,8 +31,7 @@ class UserController {
 
         delete user.password
 
-        const result = new JsonResponse('User created', true, user)
-        return res.status(201).json(result)
+        return res.status(201).json(result.response('User created', true, user))
     }
 }
 

@@ -3,7 +3,7 @@ import { decode } from "jsonwebtoken";
 import { getCustomRepository } from "typeorm";
 import UserRepository from "../repositories/UserRepository";
 import User from "../models/User";
-import { JsonResponse } from "src/concerns/response";
+import result from "src/concerns/response";
 
 async function decoder(req: Request): Promise<User | undefined> {
   const authHeader = req.headers.authorization || "";
@@ -32,8 +32,7 @@ function is(role: String[]) {
       return next();
     }
 
-    const result = new JsonResponse('Not authorized!', false)
-    return res.status(401).json(result);
+    return res.status(401).json(result.response('Not authorized!', false));
   };
 
   return roleAuthorized;

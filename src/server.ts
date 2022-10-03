@@ -16,7 +16,7 @@ const PermissionV1Router = require('./routes/v1/permissions.routes')
 const RoleV1Router = require('./routes/v1/roles.routes')
 const ProductV1Router = require('./routes/v1/products.routes')
 
-import { JsonResponse } from './concerns/response'
+import result from './concerns/response'
 
 const PORT = process.env.PORT || 3333
 
@@ -36,9 +36,8 @@ app
 
     .use((req, res) => {
         const pathname = req.originalUrl
-        const result = new JsonResponse(`Can't found this route: ${pathname}`, false).response()
 
-        res.status(404).json(result);
+        res.status(404).json(result.response(`Can't found this route: ${pathname}`, false));
     })
 
     .listen(PORT, () => {

@@ -2,7 +2,7 @@ import { getCustomRepository } from 'typeorm';
 import { Request, Response } from "express";
 import RoleRepository from 'src/repositories/RoleRepository';
 import PermissionRepository from 'src/repositories/PermissionRepository';
-import { JsonResponse } from 'src/concerns/response';
+import result from 'src/concerns/response';
 
 
 class RoleController {
@@ -14,10 +14,7 @@ class RoleController {
 
         const existRole = await roleRepository.findOne({ name })
 
-        if (existRole) {
-            const result = new JsonResponse('Role already exists!', false)
-            return res.status(400).json(result)
-        }
+        if (existRole) return res.status(400).json(result.response('Role already exists!', false))
 
         const existPermissions = await permissionRepository.findByIds(permissions)
 
@@ -29,8 +26,7 @@ class RoleController {
 
         await roleRepository.save(role)
 
-        const result = new JsonResponse('Role created!', true, role)
-        return res.status(201).json(result)
+        return res.status(201).json(result.response('Role created!', true, role))
     }
 }
 
